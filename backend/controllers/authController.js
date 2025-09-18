@@ -18,7 +18,7 @@ const handleError = (res, err) => {
   return res.status(500).json({ error: "Server error" });
 };
 
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -41,11 +41,11 @@ exports.registerUser = async (req, res) => {
       token,
     });
   } catch (err) {
-    handleError(res, err);
+    next(err); // pass error to global handler
   }
 };
 
-exports.loginUser = async (req, res) => {
+exports.loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -74,6 +74,6 @@ exports.loginUser = async (req, res) => {
       token,
     });
   } catch (err) {
-    handleError(res, err);
+    next(err); // pass error to global handler
   }
 };
