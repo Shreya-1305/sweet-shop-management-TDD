@@ -59,4 +59,21 @@ describe("Auth - Register Route (Unit Tests)", () => {
       { expiresIn: "1h" }
     );
   });
+
+  it("should return 400 if email already exists", async () => {
+    const newUser = {
+      name: "Shreya",
+      email: "shreya@example.com",
+      password: "password123",
+    };
+
+    const error = new Error();
+    error.code = 11000; // Mongo duplicate key error
+    User.create.mockRejectedValue(error);
+
+    const res = await request(app).post("/api/auth/register").send(newUser);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "Email already exists");
+  });
 });
