@@ -13,24 +13,32 @@ const generateToken = (user) =>
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Create user
-  const user = await User.create({ name, email, password: hashedPassword });
+    // Create user
+    const user = await User.create({ name, email, password: hashedPassword });
 
-  // Generate token
-  const token = generateToken(user);
+    // Generate token
+    const token = generateToken(user);
 
-  // Send response
-  return res.status(201).json({
-    message: "User registered successfully",
-    user: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    },
-    token,
-  });
+    // Send response
+    return res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      token,
+    });
+  } catch (err) {
+    // Handle duplicate email
+    if (err.code === 11000) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+    return res.status(500).json({ error: "Server error" });
+  }
 };
