@@ -76,4 +76,30 @@ describe("Auth - Register Route (Unit Tests)", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("error", "Email already exists");
   });
+
+  it("should return 400 if required fields are missing", async () => {
+    const incompleteUser = { email: "shreya@example.com" };
+
+    const res = await request(app)
+      .post("/api/auth/register")
+      .send(incompleteUser);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error");
+  });
+
+  it("should return 500 for server errors", async () => {
+    const newUser = {
+      name: "Shreya",
+      email: "shreya@example.com",
+      password: "password123",
+    };
+    const error = new Error("Database is down");
+    User.create.mockRejectedValue(error);
+
+    const res = await request(app).post("/api/auth/register").send(newUser);
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body).toHaveProperty("error", "Server error");
+  });
 });
