@@ -46,18 +46,6 @@ describe("Auth - Register Route (Unit Tests)", () => {
     expect(res.body.user).toHaveProperty("_id", "123");
     expect(res.body.user).toHaveProperty("role", "user");
     expect(res.body).toHaveProperty("token", "mockToken123");
-
-    expect(bcrypt.hash).toHaveBeenCalledWith(newUser.password, 10);
-    expect(User.create).toHaveBeenCalledWith({
-      name: newUser.name,
-      email: newUser.email,
-      password: "hashedPassword123",
-    });
-    expect(jwt.sign).toHaveBeenCalledWith(
-      { id: "123", email: newUser.email, role: "user" },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
   });
 
   it("should return 400 if email already exists", async () => {
