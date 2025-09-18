@@ -41,7 +41,7 @@ exports.registerUser = async (req, res, next) => {
       token,
     });
   } catch (err) {
-    next(err); // pass error to global handler
+    next(err);
   }
 };
 
@@ -74,6 +74,6 @@ exports.loginUser = async (req, res, next) => {
       token,
     });
   } catch (err) {
-    next(err); // pass error to global handler
+    next(err);
   }
 };

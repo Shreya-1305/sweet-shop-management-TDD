@@ -27,6 +27,9 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "verbose": true
+    "verbose": true,
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
   }
 }
