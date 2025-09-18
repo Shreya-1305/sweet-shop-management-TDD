@@ -10,6 +10,14 @@ const generateToken = (user) =>
     { expiresIn: "1h" }
   );
 
+// Helper: handle errors consistently
+const handleError = (res, err) => {
+  if (err.code === 11000) {
+    return res.status(400).json({ error: "Email already exists" });
+  }
+  return res.status(500).json({ error: "Server error" });
+};
+
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -40,11 +48,6 @@ exports.registerUser = async (req, res) => {
       token,
     });
   } catch (err) {
-    // Handle duplicate email
-    if (err.code === 11000) {
-      return res.status(400).json({ error: "Email already exists" });
-    }
-    // Handle server errors
-    return res.status(500).json({ error: "Server error" });
+    handleError(res, err);
   }
 };
