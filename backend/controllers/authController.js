@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// helper: generate JWT token
+// Helper: generate JWT token
 const generateToken = (user) =>
   jwt.sign(
     { id: user._id, email: user.email, role: user.role },
@@ -12,6 +12,11 @@ const generateToken = (user) =>
 
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+
+  // Validate required fields
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
 
   try {
     // Hash password
@@ -39,6 +44,7 @@ exports.registerUser = async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ error: "Email already exists" });
     }
+    // Handle server errors
     return res.status(500).json({ error: "Server error" });
   }
 };
