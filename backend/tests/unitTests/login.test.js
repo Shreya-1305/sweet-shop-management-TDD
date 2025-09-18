@@ -18,7 +18,6 @@ jest.mock("jsonwebtoken", () => ({
 describe("Auth - Login Route (Unit Tests)", () => {
   afterEach(() => jest.clearAllMocks());
 
-  // 1️⃣ Success scenario
   it("should login successfully and return token", async () => {
     const user = {
       _id: "123",
