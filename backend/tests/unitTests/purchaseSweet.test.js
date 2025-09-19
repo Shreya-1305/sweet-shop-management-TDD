@@ -93,7 +93,6 @@ describe("POST /api/sweets/:id/purchase - Purchase Sweet", () => {
   it("should return 500 if DB fails during purchase", async () => {
     jwt.verify.mockReturnValue({ id: "u1", role: "user" });
 
-    // simulate DB failure
     Sweet.findById.mockRejectedValue(new Error("DB down"));
 
     const res = await request(app)

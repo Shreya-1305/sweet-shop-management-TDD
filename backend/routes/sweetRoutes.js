@@ -10,6 +10,11 @@ const {
   deleteSweet,
 } = require("../controllers/sweetController");
 
+const {
+  purchaseSweet,
+  restockSweet,
+} = require("../controllers/inventoryController");
+
 // Routes for sweets
 router
   .route("/")
@@ -22,5 +27,7 @@ router
   .route("/:id")
   .put(protect, restrictTo("admin"), updateSweet) // Admin only: Update sweet
   .delete(protect, restrictTo("admin"), deleteSweet); // Admin only: Delete sweet
+
+router.post("/:id/purchase", protect, purchaseSweet);
 
 module.exports = router;
