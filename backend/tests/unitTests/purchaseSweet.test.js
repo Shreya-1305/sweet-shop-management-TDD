@@ -29,7 +29,6 @@ describe("POST /api/sweets/:id/purchase - Purchase Sweet", () => {
   it("should purchase a sweet successfully and reduce quantity", async () => {
     jwt.verify.mockReturnValue(userPayload);
 
-    // mock findById to return the sweet
     Sweet.findById.mockResolvedValue({ ...sweetData });
 
     Sweet.findByIdAndUpdate.mockResolvedValue({
@@ -49,6 +48,44 @@ describe("POST /api/sweets/:id/purchase - Purchase Sweet", () => {
       { quantity: 45 },
       { new: true }
     );
+  });
+
+  it("should return 400 if purchase quantity exceeds stock", async () => {
+    jwt.verify.mockReturnValue(userPayload);
+    Sweet.findById.mockResolvedValue({ ...sweetData });
+
+    const res = await request(app)
+      .post("/api/sweets/s1/purchase")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ quantity: 1000 });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "Insufficient stock");
+  });
+
+  it("should return 404 if sweet not found", async () => {
+    jwt.verify.mockReturnValue(userPayload);
+    Sweet.findById.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/api/sweets/s1/purchase")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ quantity: 5 });
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toHaveProperty("error", "Sweet not found");
+  });
+
+  it("should return 400 if quantity is not a number", async () => {
+    jwt.verify.mockReturnValue(userPayload);
+
+    const res = await request(app)
+      .post("/api/sweets/s1/purchase")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ quantity: "five" });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error");
   });
 
   it("should return 401 if no token provided", async () => {
