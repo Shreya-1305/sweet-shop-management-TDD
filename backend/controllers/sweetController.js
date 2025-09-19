@@ -80,22 +80,32 @@ exports.searchSweets = async (req, res) => {
 
 exports.updateSweet = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-
-    const { category } = req.body;
+    const { category, price, quantity } = req.body;
 
     if (category && !allowedCategories.includes(category)) {
       return sendError(res, 400, "Invalid category");
     }
 
+    if (price !== undefined && (typeof price !== "number" || price < 0)) {
+      return sendError(res, 400, "Price must be a positive number");
+    }
+
+    if (
+      quantity !== undefined &&
+      (typeof quantity !== "number" || quantity < 0)
+    ) {
+      return sendError(res, 400, "Quantity must be a positive number");
+    }
+
     const updatedSweet = await Sweet.findByIdAndUpdate(
       req.params.id,
       req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
+      { new: true, runValidators: true }
     );
+
+    if (!updatedSweet) {
+      return sendError(res, 404, "Sweet not found");
+    }
 
     return res.status(200).json({ sweet: updatedSweet });
   } catch (err) {
