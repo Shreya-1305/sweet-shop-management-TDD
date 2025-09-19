@@ -91,7 +91,7 @@ exports.restrictTo =
   (...roles) =>
   (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return sendError(res, 403, "Forbidden: Admin only");
+      return sendError(res, 403, "Forbidden: Access denied");
     }
     next();
   };

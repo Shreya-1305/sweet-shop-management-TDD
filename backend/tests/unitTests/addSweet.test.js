@@ -11,7 +11,7 @@ jest.mock("jsonwebtoken", () => ({
   verify: jest.fn(),
 }));
 
-describe("POST /api/sweets - Add Sweet (Admin only)", () => {
+describe("POST /api/sweets - Add Sweet (Access denied)", () => {
   afterEach(() => jest.clearAllMocks());
 
   const token = "validToken123";
@@ -62,7 +62,7 @@ describe("POST /api/sweets - Add Sweet (Admin only)", () => {
       });
 
     expect(res.statusCode).toBe(403);
-    expect(res.body).toHaveProperty("error", "Forbidden: Admin only");
+    expect(res.body).toHaveProperty("error", "Forbidden: Access denied");
   });
 
   it("should return 401 if no token provided", async () => {
