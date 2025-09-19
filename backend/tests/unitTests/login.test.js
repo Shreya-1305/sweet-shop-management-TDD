@@ -27,7 +27,6 @@ describe("Auth - Login Route (Unit Tests)", () => {
       role: "user",
     };
 
-    // Mock DB and bcrypt
     User.findOne.mockResolvedValue(user);
     bcrypt.compare.mockResolvedValue(true);
     jwt.sign.mockReturnValue("mockToken123");

@@ -3,7 +3,6 @@ const app = require("../../app.js");
 const Sweet = require("../../models/sweetModel.js");
 const jwt = require("jsonwebtoken");
 
-// Mock Sweet model & JWT
 jest.mock("../../models/sweetModel.js", () => ({
   findByIdAndUpdate: jest.fn(),
 }));
@@ -129,7 +128,7 @@ describe("PUT /api/sweets/:id - Update Sweet (Admin only)", () => {
     expect(res.body).toHaveProperty("error", "Sweet not found");
   });
 
-  it("should return 500 if DB fails", async () => {
+  it("should return 500 if server fails", async () => {
     jwt.verify.mockReturnValue(adminPayload);
     Sweet.findByIdAndUpdate.mockRejectedValue(new Error("Server error"));
 

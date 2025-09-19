@@ -1,10 +1,8 @@
-// tests/unitTests/deleteSweet.test.js
 const request = require("supertest");
 const app = require("../../app.js");
 const Sweet = require("../../models/sweetModel.js");
 const jwt = require("jsonwebtoken");
 
-// Mock Sweet model & JWT
 jest.mock("../../models/sweetModel.js", () => ({
   findByIdAndDelete: jest.fn(),
 }));
@@ -75,7 +73,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
     expect(res.body).toHaveProperty("error", "Sweet not found");
   });
 
-  it("should return 500 if DB fails", async () => {
+  it("should return 500 if server fails", async () => {
     jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
     Sweet.findByIdAndDelete.mockRejectedValue(new Error("Server error"));
 

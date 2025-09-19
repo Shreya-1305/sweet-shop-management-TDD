@@ -11,7 +11,6 @@ const allowedCategories = [
   "Ladoo",
 ];
 
-// Helper: validate sweet input
 const validateSweetInput = ({ name, category, price, quantity }) => {
   if (!name || !category || price === undefined || quantity === undefined) {
     return "All fields are required";

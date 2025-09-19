@@ -38,14 +38,12 @@ describe("Auth Integration Tests", () => {
   });
 
   it("should login a registered user and return a token", async () => {
-    // Register the user first
     await request(app).post("/api/auth/register").send({
       name: "Shreya",
       email: "shreya@example.com",
       password: "password123",
     });
 
-    // Login
     const res = await request(app).post("/api/auth/login").send({
       email: "shreya@example.com",
       password: "password123",

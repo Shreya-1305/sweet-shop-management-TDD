@@ -1,9 +1,8 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const sendError = require("../utils/sendError"); // imported from utils
+const sendError = require("../utils/sendError");
 
-// Generate JWT token
 const generateToken = (user) =>
   jwt.sign(
     { id: user._id, email: user.email, role: user.role },

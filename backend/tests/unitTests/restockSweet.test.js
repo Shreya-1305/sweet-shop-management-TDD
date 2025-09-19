@@ -113,10 +113,9 @@ describe("POST /api/sweets/:id/restock - Restock Sweet (Admin only)", () => {
     expect(res.body).toHaveProperty("error", "Invalid token");
   });
 
-  it("should return 500 if DB fails during restock", async () => {
+  it("should return 500 if server fails during restock", async () => {
     jwt.verify.mockReturnValue({ id: "a1", role: "admin" });
 
-    // simulate DB failure
     Sweet.findById.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)

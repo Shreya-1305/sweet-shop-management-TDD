@@ -38,7 +38,6 @@ exports.restockSweet = async (req, res) => {
   const sweetId = req.params.id;
   const { quantity } = req.body;
 
-  // Validate quantity
   if (!quantity || typeof quantity !== "number" || quantity <= 0) {
     return sendError(res, 400, "Invalid quantity");
   }

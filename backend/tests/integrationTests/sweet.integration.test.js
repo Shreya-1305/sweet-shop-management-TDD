@@ -9,15 +9,13 @@ const Sweet = require("../../models/sweetModel");
 const bcrypt = require("bcryptjs");
 
 let mongoServer;
-let adminToken; // JWT token for admin
-let userToken; // JWT token for regular user
+let adminToken;
+let userToken;
 
 beforeAll(async () => {
-  // Start in-memory MongoDB server
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
 
-  // Connect mongoose to in-memory DB
   await mongoose.connect(uri);
 
   // Create admin user
@@ -59,7 +57,6 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  // Clear sweets after each test
   await Sweet.deleteMany({});
 });
 

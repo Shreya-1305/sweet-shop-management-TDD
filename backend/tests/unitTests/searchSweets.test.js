@@ -127,7 +127,7 @@ describe("GET /api/sweets/search - Search Sweets ", () => {
     expect(res.body).toHaveProperty("error", "Invalid token");
   });
 
-  it("should return 500 if DB fails", async () => {
+  it("should return 500 if server fails", async () => {
     jwt.verify.mockReturnValue(userPayload);
     Sweet.find.mockRejectedValue(new Error("Server error"));
 

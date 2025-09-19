@@ -2,7 +2,6 @@ const request = require("supertest");
 const app = require("../../app");
 const sendError = require("../../utils/sendError");
 
-// Mock sendError so we can check it was called
 jest.mock("../../utils/sendError");
 
 describe("Catch-all 404 route", () => {
