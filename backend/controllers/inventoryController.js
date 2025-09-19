@@ -38,12 +38,14 @@ exports.restockSweet = async (req, res) => {
   const sweetId = req.params.id;
   const { quantity } = req.body;
 
-  if (!quantity) {
+  // Validate quantity
+  if (!quantity || typeof quantity !== "number" || quantity <= 0) {
     return sendError(res, 400, "Invalid quantity");
   }
 
   try {
     const sweet = await Sweet.findById(sweetId);
+    if (!sweet) return sendError(res, 404, "Sweet not found");
 
     const updatedSweet = await Sweet.findByIdAndUpdate(
       sweetId,
