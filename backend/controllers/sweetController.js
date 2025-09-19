@@ -53,9 +53,18 @@ exports.getAllSweets = async (req, res) => {
 
 exports.searchSweets = async (req, res) => {
   try {
-    const { name } = req.query;
+    const authHeader = req.headers.authorization;
+
+    const { name, category, minPrice, maxPrice } = req.query;
+
     const query = {};
-    if (name) query.name = { $regex: name, $options: "i" };
+    if (name) query.name = { $regex: name, $options: "i" }; // case-insensitive
+    if (category) query.category = category;
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
 
     const sweets = await Sweet.find(query);
     return res.status(200).json({ sweets });
