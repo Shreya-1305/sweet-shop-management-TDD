@@ -1,7 +1,6 @@
 const express = require("express");
 const authRoutes = require("./routes/authRoutes");
 const sweetRoutes = require("./routes/sweetRoutes");
-const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
@@ -11,6 +10,6 @@ app.use("/api/auth", authRoutes);
 
 app.use("/api/sweets", sweetRoutes);
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 module.exports = app;

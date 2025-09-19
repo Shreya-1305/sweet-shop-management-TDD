@@ -11,7 +11,7 @@ jest.mock("jsonwebtoken", () => ({
   verify: jest.fn(),
 }));
 
-describe("GET /api/sweets - Get All Sweets (Protected)", () => {
+describe("GET /api/sweets - Get All Sweets", () => {
   afterEach(() => jest.clearAllMocks());
 
   const token = "validToken123";

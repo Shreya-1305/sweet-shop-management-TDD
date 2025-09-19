@@ -50,3 +50,17 @@ exports.getAllSweets = async (req, res) => {
     return sendError(res, 500, "Server error");
   }
 };
+
+exports.searchSweets = async (req, res) => {
+  try {
+    const { name } = req.query;
+    const query = {};
+    if (name) query.name = { $regex: name, $options: "i" };
+
+    const sweets = await Sweet.find(query);
+    return res.status(200).json({ sweets });
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, "Server error");
+  }
+};
