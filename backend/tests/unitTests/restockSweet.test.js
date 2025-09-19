@@ -61,6 +61,35 @@ describe("POST /api/sweets/:id/restock - Restock Sweet (Admin only)", () => {
     expect(res.body).toHaveProperty("error", "Forbidden: Access denied");
   });
 
+  it("should return 404 if sweet not found", async () => {
+    jwt.verify.mockReturnValue(adminPayload);
+    Sweet.findById.mockResolvedValue(null);
+
+    const res = await request(app)
+      .post("/api/sweets/s1/restock")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ quantity: 20 });
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toHaveProperty("error", "Sweet not found");
+  });
+
+  it("should return 400 if quantity is invalid", async () => {
+    jwt.verify.mockReturnValue(adminPayload);
+
+    const testCases = [{ quantity: -5 }, { quantity: 0 }, { quantity: "ten" }];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .post("/api/sweets/s1/restock")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
+  });
+
   it("should return 401 if no token provided", async () => {
     const res = await request(app)
       .post("/api/sweets/s1/restock")
