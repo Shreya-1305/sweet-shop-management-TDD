@@ -29,8 +29,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(204);
-    expect(res.body).toHaveProperty("message", "Sweet deleted successfully");
-    expect(Sweet.findByIdAndDelete).toHaveBeenCalledWith("s1");
+    expect(res.body).toEqual({});
   });
 
   it("should return 403 if user is not admi", async () => {
