@@ -57,6 +57,10 @@ exports.searchSweets = async (req, res) => {
 
     const { name, category, minPrice, maxPrice } = req.query;
 
+    if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
+      return sendError(res, 400, "Invalid price range");
+    }
+
     const query = {};
     if (name) query.name = { $regex: name, $options: "i" }; // case-insensitive
     if (category) query.category = category;
