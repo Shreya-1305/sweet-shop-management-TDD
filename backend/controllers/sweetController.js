@@ -113,3 +113,18 @@ exports.updateSweet = async (req, res) => {
     return sendError(res, 500, "Server error");
   }
 };
+
+exports.deleteSweet = async (req, res) => {
+  try {
+    const deletedSweet = await Sweet.findByIdAndDelete(req.params.id);
+
+    if (!deletedSweet) {
+      return sendError(res, 404, "Sweet not found");
+    }
+
+    return res.status(200).json({ message: "Sweet deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, "Server error");
+  }
+};

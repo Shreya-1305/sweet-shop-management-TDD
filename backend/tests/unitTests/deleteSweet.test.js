@@ -33,7 +33,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
     expect(Sweet.findByIdAndDelete).toHaveBeenCalledWith("s1");
   });
 
-  it("should return 403 if non-admin tries to delete", async () => {
+  it("should return 403 if user is not admi", async () => {
     jwt.verify.mockReturnValue({ id: "u2", role: "user" });
 
     const res = await request(app)
@@ -41,7 +41,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(403);
-    expect(res.body).toHaveProperty("error", "Forbidden: Admin only");
+    expect(res.body).toHaveProperty("error", "Forbidden: Access denied");
   });
 
   it("should return 401 if no token provided", async () => {

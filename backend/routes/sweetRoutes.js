@@ -4,6 +4,7 @@ const {
   addSweet,
   getAllSweets,
   searchSweets,
+  deleteSweet,
 } = require("../controllers/sweetController");
 
 const { protect, restrictTo } = require("../controllers/authController");
@@ -14,5 +15,6 @@ router.post("/", protect, restrictTo("admin"), addSweet);
 router.get("/", protect, getAllSweets);
 router.get("/search", protect, searchSweets);
 router.put("/:id", protect, restrictTo("admin"), updateSweet);
+router.delete("/:id", protect, restrictTo("admin"), deleteSweet);
 
 module.exports = router;
