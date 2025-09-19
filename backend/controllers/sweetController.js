@@ -77,3 +77,29 @@ exports.searchSweets = async (req, res) => {
     return sendError(res, 500, "Server error");
   }
 };
+
+exports.updateSweet = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    const { category } = req.body;
+
+    if (category && !allowedCategories.includes(category)) {
+      return sendError(res, 400, "Invalid category");
+    }
+
+    const updatedSweet = await Sweet.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    return res.status(200).json({ sweet: updatedSweet });
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, "Server error");
+  }
+};
