@@ -70,7 +70,7 @@ describe("GET /api/sweets - Get All Sweets", () => {
 
   it("should return 500 if Server fails", async () => {
     jwt.verify.mockReturnValue(userPayload);
-    Sweet.find.mockRejectedValue(new Error("DB down"));
+    Sweet.find.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .get("/api/sweets")

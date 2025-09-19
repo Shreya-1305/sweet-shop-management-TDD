@@ -117,7 +117,7 @@ describe("POST /api/sweets/:id/restock - Restock Sweet (Admin only)", () => {
     jwt.verify.mockReturnValue({ id: "a1", role: "admin" });
 
     // simulate DB failure
-    Sweet.findById.mockRejectedValue(new Error("DB down"));
+    Sweet.findById.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .post("/api/sweets/s1/restock")

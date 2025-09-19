@@ -77,7 +77,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
 
   it("should return 500 if DB fails", async () => {
     jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
-    Sweet.findByIdAndDelete.mockRejectedValue(new Error("DB down"));
+    Sweet.findByIdAndDelete.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .delete("/api/sweets/s1")

@@ -177,7 +177,7 @@ describe("POST /api/sweets - Add Sweet (Access denied)", () => {
 
   it("should return 500 if Server fails", async () => {
     jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
-    Sweet.create.mockRejectedValue(new Error("DB down"));
+    Sweet.create.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .post("/api/sweets")

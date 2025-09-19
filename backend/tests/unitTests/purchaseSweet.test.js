@@ -130,7 +130,7 @@ describe("POST /api/sweets/:id/purchase - Purchase Sweet", () => {
   it("should return 500 if DB fails during purchase", async () => {
     jwt.verify.mockReturnValue({ id: "u1", role: "user" });
 
-    Sweet.findById.mockRejectedValue(new Error("DB down"));
+    Sweet.findById.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .post("/api/sweets/s1/purchase")

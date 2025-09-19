@@ -77,7 +77,7 @@ describe("Auth - Login Route (Unit Tests)", () => {
   });
 
   it("should return 500 for server errors", async () => {
-    User.findOne.mockRejectedValue(new Error("DB down"));
+    User.findOne.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app).post("/api/auth/login").send({
       email: "shreya@example.com",

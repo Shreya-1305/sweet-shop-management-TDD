@@ -131,7 +131,7 @@ describe("PUT /api/sweets/:id - Update Sweet (Admin only)", () => {
 
   it("should return 500 if DB fails", async () => {
     jwt.verify.mockReturnValue(adminPayload);
-    Sweet.findByIdAndUpdate.mockRejectedValue(new Error("DB down"));
+    Sweet.findByIdAndUpdate.mockRejectedValue(new Error("Server error"));
 
     const res = await request(app)
       .put("/api/sweets/s1")
