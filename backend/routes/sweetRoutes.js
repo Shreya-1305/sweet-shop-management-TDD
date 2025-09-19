@@ -29,5 +29,6 @@ router
   .delete(protect, restrictTo("admin"), deleteSweet); // Admin only: Delete sweet
 
 router.post("/:id/purchase", protect, purchaseSweet);
+router.post("/:id/restock", protect, restrictTo("admin"), restockSweet);
 
 module.exports = router;

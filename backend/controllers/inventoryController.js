@@ -33,3 +33,29 @@ exports.purchaseSweet = async (req, res) => {
     return sendError(res, 500, "Server error");
   }
 };
+
+exports.restockSweet = async (req, res) => {
+  const sweetId = req.params.id;
+  const { quantity } = req.body;
+
+  if (!quantity) {
+    return sendError(res, 400, "Invalid quantity");
+  }
+
+  try {
+    const sweet = await Sweet.findById(sweetId);
+
+    const updatedSweet = await Sweet.findByIdAndUpdate(
+      sweetId,
+      { quantity: sweet.quantity + quantity },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Restock successful", sweet: updatedSweet });
+  } catch (err) {
+    console.error(err);
+    return sendError(res, 500, "Server error");
+  }
+};
