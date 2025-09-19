@@ -79,6 +79,31 @@ describe("GET /api/sweets/search - Search Sweets ", () => {
     expect(res.body.sweets[0].price).toBeLessThanOrEqual(25);
   });
 
+  it("should return empty array if no sweets match", async () => {
+    jwt.verify.mockReturnValue(userPayload);
+    Sweet.find.mockResolvedValue([]);
+
+    const res = await request(app)
+      .get("/api/sweets/search")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ name: "Nonexistent" });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.sweets).toEqual([]);
+  });
+
+  it("should return 400 for invalid price range", async () => {
+    jwt.verify.mockReturnValue(userPayload);
+
+    const res = await request(app)
+      .get("/api/sweets/search")
+      .set("Authorization", `Bearer ${token}`)
+      .query({ minPrice: 50, maxPrice: 10 }); // minPrice > maxPrice
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "Invalid price range");
+  });
+
   it("should return 401 if no token provided", async () => {
     const res = await request(app)
       .get("/api/sweets/search")
