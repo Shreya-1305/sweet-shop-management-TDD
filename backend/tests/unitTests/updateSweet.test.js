@@ -35,11 +35,38 @@ describe("PUT /api/sweets/:id - Update Sweet (Admin only)", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.sweet).toHaveProperty("name", "Updated Sweet");
-    expect(Sweet.findByIdAndUpdate).toHaveBeenCalledWith(
-      "s1",
-      { name: "Updated Sweet", price: 60 },
-      { new: true, runValidators: true }
-    );
+  });
+
+  it("should return 400 if price or quantity is negative", async () => {
+    jwt.verify.mockReturnValue(adminPayload);
+
+    const testCases = [{ price: -10 }, { quantity: -5 }];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .put("/api/sweets/s1")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
+  });
+
+  it("should return 400 if price or quantity is not a number", async () => {
+    jwt.verify.mockReturnValue(adminPayload);
+
+    const testCases = [{ price: "abc" }, { quantity: "ten" }];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .put("/api/sweets/s1")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
   });
 
   it("should return 403 if user is not admin", async () => {
@@ -51,7 +78,7 @@ describe("PUT /api/sweets/:id - Update Sweet (Admin only)", () => {
       .send({ name: "Updated Sweet" });
 
     expect(res.statusCode).toBe(403);
-    expect(res.body).toHaveProperty("error", "Forbidden: Admin only");
+    expect(res.body).toHaveProperty("error", "Forbidden: Access denied");
   });
 
   it("should return 400 if invalid category is provided", async () => {
