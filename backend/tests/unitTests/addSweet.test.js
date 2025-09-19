@@ -95,4 +95,107 @@ describe("POST /api/sweets - Add Sweet (Admin only)", () => {
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("error", "Invalid token");
   });
+  it("should return 400 if any required field is missing", async () => {
+    jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
+
+    const testCases = [
+      { category: "Fried", price: 50, quantity: 10 }, // missing name
+      { name: "Ladoo", price: 30, quantity: 5 }, // missing category
+      { name: "Barfi", category: "Barfi", quantity: 10 }, // missing price
+      { name: "Jalebi", category: "Sugar-based", price: 20 }, // missing quantity
+    ];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .post("/api/sweets")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
+  });
+
+  it("should return 400 if price or quantity is negative", async () => {
+    jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
+
+    const testCases = [
+      { name: "Rasgulla", category: "Milk-based", price: -10, quantity: 10 },
+      {
+        name: "Kaju Katli",
+        category: "Dry Fruits-based",
+        price: 50,
+        quantity: -5,
+      },
+    ];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .post("/api/sweets")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
+  });
+
+  it("should return 400 if price or quantity is not a number", async () => {
+    jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
+
+    const testCases = [
+      { name: "Rasgulla", category: "Milk-based", price: "abc", quantity: 10 },
+      {
+        name: "Kaju Katli",
+        category: "Dry Fruits-based",
+        price: 50,
+        quantity: "ten",
+      },
+    ];
+
+    for (const payload of testCases) {
+      const res = await request(app)
+        .post("/api/sweets")
+        .set("Authorization", `Bearer ${token}`)
+        .send(payload);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty("error");
+    }
+  });
+
+  it("should return 400 if category is invalid", async () => {
+    jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
+
+    const res = await request(app)
+      .post("/api/sweets")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Unknown Sweet",
+        category: "InvalidCategory",
+        price: 50,
+        quantity: 10,
+      });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "Invalid category");
+  });
+
+  it("should return 500 if Server fails", async () => {
+    jwt.verify.mockReturnValue({ id: "u1", role: "admin" });
+    Sweet.create.mockRejectedValue(new Error("DB down"));
+
+    const res = await request(app)
+      .post("/api/sweets")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Kaju Katli",
+        category: "Dry Fruits-based",
+        price: 120,
+        quantity: 10,
+      });
+
+    expect(res.statusCode).toBe(500);
+    expect(res.body).toHaveProperty("error", "Server error");
+  });
 });
