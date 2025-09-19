@@ -28,7 +28,7 @@ describe("DELETE /api/sweets/:id - Delete Sweet (Admin only)", () => {
       .delete("/api/sweets/s1")
       .set("Authorization", `Bearer ${token}`);
 
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(204);
     expect(res.body).toHaveProperty("message", "Sweet deleted successfully");
     expect(Sweet.findByIdAndDelete).toHaveBeenCalledWith("s1");
   });
