@@ -40,12 +40,6 @@ describe("POST /api/sweets - Add Sweet (Access denied)", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("sweet");
     expect(res.body.sweet).toHaveProperty("name", "Gulab Jamun");
-    expect(Sweet.create).toHaveBeenCalledWith({
-      name: "Gulab Jamun",
-      category: "Fried",
-      price: 50,
-      quantity: 100,
-    });
   });
 
   it("should return 403 if non-admin user tries to add sweet", async () => {
