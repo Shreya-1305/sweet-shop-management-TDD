@@ -45,10 +45,9 @@ It includes:
 
 ---
 
-
 ## Deployed Project
 
-You can view the live project here: [Sweet Shop Management](https://vercel.com/shreya-1305s-projects/sweet-shop-management-tdd-srhm)
+You can view the live project here: [Sweet Shop Management](https://sweet-shop-management-tdd-k9hz.vercel.app/admin)
 
 ## 📁 Project Structure
 
@@ -110,6 +109,7 @@ Runs at: `http://localhost:5000`
 ```env
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
+PORT=your_port
 ```
 
 ---
