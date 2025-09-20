@@ -169,16 +169,15 @@ const HeroSection = () => {
                 </div>
 
                 {/* Floating Elements */}
-                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center text-white text-2xl animate-float shadow-lg">
-                  🌟
-                </div>
-                <div className="absolute top-1/4 -left-8 w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white text-xl animate-pulse shadow-lg">
-                  🎉
-                </div>
+                {/* <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-r from-pink-400 to-red-400 rounded-full flex items-center justify-center text-white text-2xl animate-float shadow-lg"></div>
+                <div className="absolute top-1/4 -left-8 w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white text-xl animate-pulse shadow-lg"></div>
 
-                <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex items-center justify-center text-white text-3xl animate-float-delay shadow-lg">
-                  ✨
-                </div>
+                <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex items-center justify-center text-white text-3xl animate-float-delay shadow-lg"></div> */}
+
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-to-r from-pink-400/50 to-red-400/50 rounded-full flex items-center justify-center text-white text-2xl animate-float shadow-lg"></div>
+                <div className="absolute top-1/5 -left-8 w-12 h-12 bg-gradient-to-r from-yellow-400/50 to-orange-400/50 rounded-full flex items-center justify-center text-white text-xl animate-pulse shadow-lg"></div>
+                <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-gradient-to-r from-orange-400/50 to-pink-400/50 rounded-full flex items-center justify-center text-white text-3xl animate-float-delay shadow-lg"></div>
               </div>
 
               {/* Decorative Cards */}

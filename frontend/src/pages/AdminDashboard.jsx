@@ -196,81 +196,75 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-red-50 w-full">
       <Navbar />
 
-      <div
-        className="pt-16 flex h-screen w-500
-      "
-      >
-        <AdminSidebar
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          isSidebarOpen={isSidebarOpen}
-          setIsSidebarOpen={setIsSidebarOpen}
-          user={user}
-        />
+      <div className="pt-16 flex h-screen w-full">
+        {/* Sidebar */}
+        <div className="w-72 bg-white/80 backdrop-blur-md border-r border-gray-200">
+          <AdminSidebar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
+            user={user}
+          />
+        </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto w-full">
-          <div className="p-6 w-full max-w-none ">
-            {activeTab === "all-sweets" && (
-              <AllSweetsTable
-                sweets={filteredSweets}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                onRefresh={fetchSweets}
-                onRestock={openRestockModal}
-                onUpdate={openUpdateModal}
-                onDelete={openDeleteModal}
-              />
-            )}
+        <div className="flex-1 overflow-auto p-6">
+          {activeTab === "all-sweets" && (
+            <AllSweetsTable
+              sweets={filteredSweets}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              onRefresh={fetchSweets}
+              onRestock={openRestockModal}
+              onUpdate={openUpdateModal}
+              onDelete={openDeleteModal}
+            />
+          )}
 
-            {activeTab === "add-sweet" && (
-              <div className="w-full">
-                <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-200 p-8 w-full">
-                  <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                    Add New Sweet
-                  </h2>
-                  <AddSweetForm onSuccess={handleAddSweet} />
-                </div>
-              </div>
-            )}
+          {activeTab === "add-sweet" && (
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-200 p-8 w-full">
+              <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                Add New Sweet
+              </h2>
+              <AddSweetForm onSuccess={handleAddSweet} />
+            </div>
+          )}
 
-            {activeTab === "update-sweet" && (
-              <div className="w-full">
-                <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-200 p-8 w-full">
-                  <div className="flex items-center mb-6">
-                    <button
-                      onClick={() => setActiveTab("all-sweets")}
-                      className="mr-4 text-gray-600 hover:text-gray-800 p-2 hover:bg-pink-100 rounded-lg transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 19l-7-7 7-7"
-                        />
-                      </svg>
-                    </button>
-                    <h2 className="text-3xl font-bold text-gray-800">
-                      Update {selectedSweet?.name || "Sweet"}
-                    </h2>
-                  </div>
-                  {selectedSweet && (
-                    <UpdateSweetForm
-                      sweet={selectedSweet}
-                      onSuccess={handleUpdateSweet}
-                      onCancel={() => setActiveTab("all-sweets")}
+          {activeTab === "update-sweet" && (
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl border border-pink-200 p-8 w-full">
+              <div className="flex items-center mb-6">
+                <button
+                  onClick={() => setActiveTab("all-sweets")}
+                  className="mr-4 text-gray-600 hover:text-gray-800 p-2 hover:bg-pink-100 rounded-lg transition-colors duration-200"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
                     />
-                  )}
-                </div>
+                  </svg>
+                </button>
+                <h2 className="text-3xl font-bold text-gray-800">
+                  Update {selectedSweet?.name || "Sweet"}
+                </h2>
               </div>
-            )}
-          </div>
+              {selectedSweet && (
+                <UpdateSweetForm
+                  sweet={selectedSweet}
+                  onSuccess={handleUpdateSweet}
+                  onCancel={() => setActiveTab("all-sweets")}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -281,7 +275,6 @@ const AdminDashboard = () => {
         selectedSweet={selectedSweet}
         onRestock={handleRestock}
       />
-
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
