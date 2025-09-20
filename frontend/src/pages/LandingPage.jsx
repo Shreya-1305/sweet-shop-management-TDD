@@ -1,8 +1,11 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
+import { useAuth } from "../context/AuthContext";
 
 const LandingPage = () => {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -14,14 +17,30 @@ const LandingPage = () => {
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
-              Why Choose{" "}
-              <span className="bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
-                MithaiMart?
-              </span>
+              {isAuthenticated() ? (
+                <>
+                  Welcome to your sweet journey,{" "}
+                  <span className="bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
+                    {user?.name}!
+                  </span>
+                </>
+              ) : (
+                <>
+                  Why Choose{" "}
+                  <span className="bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
+                    MithaiMart?
+                  </span>
+                </>
+              )}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experience the authentic taste of India's finest sweets with our
-              premium quality assurance and doorstep delivery
+              {isAuthenticated()
+                ? `${
+                    user?.role === "admin"
+                      ? "Manage your sweet empire with our comprehensive admin tools"
+                      : "Browse our premium collection and enjoy exclusive member benefits"
+                  }`
+                : "Experience the authentic taste of India's finest sweets with our premium quality assurance and doorstep delivery"}
             </p>
           </div>
 
@@ -88,21 +107,46 @@ const LandingPage = () => {
           <div className="mt-16 bg-gradient-to-r from-pink-500 via-red-500 to-orange-500 rounded-3xl p-8 text-center text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative z-10">
-              <h3 className="text-2xl sm:text-3xl font-bold mb-4">
-                🎉 Grand Opening Special!
-              </h3>
-              <p className="text-lg mb-6 opacity-90">
-                Get 25% off on your first order + Free delivery on orders above
-                ₹500
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button className="px-8 py-3 bg-white text-pink-600 font-semibold rounded-full hover:bg-pink-50 transition-colors duration-300 transform hover:scale-105">
-                  Claim Offer Now
-                </button>
-                <span className="text-sm opacity-80">
-                  *Valid till stocks last
-                </span>
-              </div>
+              {isAuthenticated() ? (
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+                    🎉 Welcome Back Offer!
+                  </h3>
+                  <p className="text-lg mb-6 opacity-90">
+                    {user?.role === "admin"
+                      ? "Check your dashboard for store insights and manage inventory"
+                      : "Enjoy exclusive member discounts on all premium sweets + Priority delivery"}
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button className="px-8 py-3 bg-white text-pink-600 font-semibold rounded-full hover:bg-pink-50 transition-colors duration-300 transform hover:scale-105">
+                      {user?.role === "admin"
+                        ? "Go to Dashboard"
+                        : "Start Shopping"}
+                    </button>
+                    <span className="text-sm opacity-80">
+                      *Exclusive member benefits
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-4">
+                    🎉 Grand Opening Special!
+                  </h3>
+                  <p className="text-lg mb-6 opacity-90">
+                    Get 25% off on your first order + Free delivery on orders
+                    above ₹500
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button className="px-8 py-3 bg-white text-pink-600 font-semibold rounded-full hover:bg-pink-50 transition-colors duration-300 transform hover:scale-105">
+                      Claim Offer Now
+                    </button>
+                    <span className="text-sm opacity-80">
+                      *Valid till stocks last
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Decorative Elements */}
