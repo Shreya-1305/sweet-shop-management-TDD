@@ -36,6 +36,9 @@ const AdminDashboard = () => {
 
   const fetchSweets = async () => {
     try {
+      // Clear filters first
+      setSearchTerm("");
+
       const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/api/sweets`, {
         headers: {
@@ -46,6 +49,7 @@ const AdminDashboard = () => {
 
       if (!response.ok) throw new Error("Failed to fetch sweets");
       const data = await response.json();
+
       setSweets(data.sweets || []);
       setFilteredSweets(data.sweets || []);
     } catch (error) {
