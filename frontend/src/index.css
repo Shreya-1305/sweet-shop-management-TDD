@@ -147,3 +147,13 @@ select,
 textarea {
   color: black;
 }
+
+input,
+input,
+select,
+textarea,
+.card,
+.form-container {
+  background-color: white !important;
+  color: black !important;
+}
