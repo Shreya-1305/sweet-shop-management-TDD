@@ -2,13 +2,14 @@ const express = require("express");
 const authRoutes = require("./routes/authRoutes");
 const sweetRoutes = require("./routes/sweetRoutes");
 const cors = require("cors");
+const sendError = require("./utils/sendError");
 
 const app = express();
 
 app.use(express.json());
 
 const corsOptions = {
-  origin: "*",
+  origin: ["https://sweet-shop-management-tdd-srhm.vercel.app"], // only frontend URL
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
