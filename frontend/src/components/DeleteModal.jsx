@@ -17,9 +17,11 @@ const DeleteModal = ({ isOpen, onClose, selectedSweet, onDelete }) => {
   }, [isOpen]);
 
   const handleDelete = async () => {
+    if (!selectedSweet?._id) return;
+
     setLoading(true);
     try {
-      await onDelete();
+      await onDelete(selectedSweet._id); // ✅ pass ID
     } catch (error) {
       console.error("Delete failed:", error);
     } finally {

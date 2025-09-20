@@ -1,129 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useNotification } from "../context/NotificationContext";
+import React from "react";
+import { useSweets } from "../context/SweetContext";
 import Navbar from "../components/Navbar";
 import SweetCard from "../components/SweetCard";
 import CustomerFeedback from "../components/CustomerFeedback";
 import SearchFilters from "../components/SearchFilters";
 
 const PurchasePage = () => {
-  const [sweets, setSweets] = useState([]);
-  const [filteredSweets, setFilteredSweets] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-
-  const { token } = useAuth();
-  const { showNotification } = useNotification();
-
-  // Fetch sweets from API
-  const fetchSweets = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/sweets`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch sweets");
-      }
-
-      const data = await response.json();
-      setSweets(data.sweets);
-      setFilteredSweets(data.sweets);
-    } catch (error) {
-      console.error("Error fetching sweets:", error);
-      showNotification("Failed to load sweets. Please try again.", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSweets();
-  }, []);
-
-  // Debounced filter
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      let filtered = sweets;
-
-      if (searchTerm) {
-        filtered = filtered.filter((sweet) =>
-          sweet.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      if (selectedCategory) {
-        filtered = filtered.filter(
-          (sweet) => sweet.category === selectedCategory
-        );
-      }
-
-      if (priceRange.min || priceRange.max) {
-        const min = parseFloat(priceRange.min) || 0;
-        const max = parseFloat(priceRange.max) || Infinity;
-        filtered = filtered.filter(
-          (sweet) => sweet.price >= min && sweet.price <= max
-        );
-      }
-
-      setFilteredSweets(filtered);
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [sweets, searchTerm, selectedCategory, priceRange]);
-
-  const handlePurchase = async (sweetId, quantity) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/sweets/${sweetId}/purchase`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ quantity: parseInt(quantity) }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Purchase failed");
-      }
-
-      // Update both sweets and filteredSweets
-      setSweets((prev) =>
-        prev.map((sweet) => (sweet._id === sweetId ? data.sweet : sweet))
-      );
-      setFilteredSweets((prev) =>
-        prev.map((sweet) => (sweet._id === sweetId ? data.sweet : sweet))
-      );
-
-      showNotification(
-        `Successfully purchased ${quantity} item(s)!`,
-        "success"
-      );
-    } catch (error) {
-      console.error("Error purchasing sweet:", error);
-      showNotification(error.message, "error");
-    }
-  };
-
-  const clearFilters = () => {
-    setSearchTerm("");
-    setSelectedCategory("");
-    setPriceRange({ min: "", max: "" });
-  };
+  const {
+    filteredSweets,
+    loading,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
+    priceRange,
+    setPriceRange,
+    fetchSweets,
+    handlePurchase,
+    clearFilters,
+  } = useSweets();
 
   if (loading) {
     return (
@@ -140,7 +35,7 @@ const PurchasePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-orange-50">
       <Navbar />
 
-      {/* Header Section */}
+      {/* Header */}
       <div className="pt-20 pb-6">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-3">
@@ -158,7 +53,7 @@ const PurchasePage = () => {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="grid lg:grid-cols-5 gap-6">
-          {/* Left Sidebar */}
+          {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <SearchFilters
               searchTerm={searchTerm}
@@ -231,7 +126,7 @@ const PurchasePage = () => {
               </div>
             )}
 
-            {/* Feedback for mobile */}
+            {/* Feedback mobile */}
             <div className="lg:hidden mt-8">
               <CustomerFeedback />
             </div>

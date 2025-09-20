@@ -29,8 +29,9 @@ const RestockModal = ({ isOpen, onClose, selectedSweet, onRestock }) => {
 
     setLoading(true);
     try {
-      await onRestock(restockQuantity);
-      setRestockQuantity("");
+      await onRestock(restockQuantity); // call SweetContext handler
+      setRestockQuantity(""); // reset input
+      onClose(); // close modal
     } catch (error) {
       console.error("Restock failed:", error);
     } finally {
