@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test jest --runInBand",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "coverage": "jest --coverage --runInBand"
   },
   "dependencies": {
