@@ -19,7 +19,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -65,8 +64,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       } else {
         await register(formData.name, formData.email, formData.password);
       }
-
-      // Reset form and close modal
       setFormData({ name: "", email: "", password: "" });
       onClose();
     } catch (error) {
@@ -83,6 +80,28 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+
+  // 🔹 Reusable input field (same styling for login & signup)
+  const InputField = ({ label, name, type = "text", placeholder }) => (
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        className={`w-full px-4 py-3 border rounded-lg bg-gray-50 
+          focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 
+          ${errors[name] ? "border-red-500" : "border-gray-300"}`}
+        placeholder={placeholder}
+      />
+      {errors[name] && (
+        <p className="mt-1 text-sm text-red-500">{errors[name]}</p>
+      )}
+    </div>
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -138,67 +157,27 @@ const AuthModal = ({ isOpen, onClose }) => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Field (Only for Register) */}
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 ${
-                    errors.name ? "border-red-500" : "border-gray-300"
-                  }`}
-                  placeholder="Enter your full name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-500">{errors.name}</p>
-                )}
-              </div>
+              <InputField
+                label="Full Name"
+                name="name"
+                placeholder="Enter your full name"
+              />
             )}
 
-            {/* Email Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter your email"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-500">{errors.email}</p>
-              )}
-            </div>
+            <InputField
+              label="Email Address"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+            />
 
-            {/* Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter your password"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-500">{errors.password}</p>
-              )}
-            </div>
+            <InputField
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+            />
 
             {/* Submit Error */}
             {errors.submit && (

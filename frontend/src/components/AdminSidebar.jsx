@@ -88,7 +88,7 @@ const AdminSidebar = ({
             <div className="space-y-2 text-sm text-pink-700">
               <div className="flex justify-between">
                 <span>Total Sweets:</span>
-                <span className="font-bold">50+</span>
+                <span className="font-bold">5</span>
               </div>
               <div className="flex justify-between">
                 <span>Categories:</span>
