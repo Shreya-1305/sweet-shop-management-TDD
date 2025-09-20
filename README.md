@@ -41,6 +41,11 @@ It includes:
 
 ---
 
+
+## Deployed Project
+
+You can view the live project here: [Sweet Shop Management](https://vercel.com/shreya-1305s-projects/sweet-shop-management-tdd-srhm)
+
 ## 📁 Project Structure
 
 ```
