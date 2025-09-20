@@ -1,5 +1,6 @@
 import React from "react";
 
+// Fixed AdminSidebar Component (removed update sweet)
 const AdminSidebar = ({
   activeTab,
   setActiveTab,
@@ -10,12 +11,10 @@ const AdminSidebar = ({
   const sidebarItems = [
     { id: "all-sweets", label: "All Sweets", icon: "📋" },
     { id: "add-sweet", label: "Add Sweet", icon: "➕" },
-    { id: "update-sweet", label: "Update Sweet", icon: "✏️" },
   ];
 
   return (
     <>
-      {/* Mobile Sidebar Toggle */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="lg:hidden fixed top-20 left-4 z-50 p-2 bg-pink-500 text-white rounded-lg shadow-lg hover:bg-pink-600 transition-colors duration-200"
@@ -35,14 +34,12 @@ const AdminSidebar = ({
         </svg>
       </button>
 
-      {/* Sidebar */}
       <div
         className={`${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-300 fixed lg:relative z-40 w-64 h-full bg-white/80 backdrop-blur-md shadow-xl border-r border-pink-200`}
       >
         <div className="p-6">
-          {/* Header */}
           <div className="flex items-center space-x-3 mb-8">
             <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-red-500 rounded-xl flex items-center justify-center">
               <svg
@@ -55,11 +52,12 @@ const AdminSidebar = ({
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-800">Admin Panel</h3>
-              <p className="text-sm text-gray-500">Welcome, {user?.name}</p>
+              <p className="text-sm text-gray-500">
+                Welcome, {user?.name || "Admin"}
+              </p>
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="space-y-2">
             {sidebarItems.map((item) => (
               <button
@@ -80,7 +78,6 @@ const AdminSidebar = ({
             ))}
           </nav>
 
-          {/* Admin Stats */}
           <div className="mt-8 p-4 bg-gradient-to-r from-pink-100 to-rose-100 rounded-xl border border-pink-200">
             <h4 className="text-sm font-semibold text-pink-800 mb-2">
               Quick Stats
@@ -103,7 +100,6 @@ const AdminSidebar = ({
         </div>
       </div>
 
-      {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-30"

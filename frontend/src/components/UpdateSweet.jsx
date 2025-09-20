@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-const UpdateSweet = ({ selectedSweet, onUpdateSweet, onBack }) => {
+const UpdateSweetForm = ({ sweet, onSuccess, onCancel }) => {
   const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    price: "",
-    quantity: "",
+    name: sweet.name,
+    category: sweet.category,
+    price: sweet.price.toString(),
+    quantity: sweet.quantity.toString(),
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const allowedCategories = [
     "Milk-based",
@@ -20,164 +21,226 @@ const UpdateSweet = ({ selectedSweet, onUpdateSweet, onBack }) => {
     "Ladoo",
   ];
 
-  useEffect(() => {
-    if (selectedSweet) {
-      setFormData({
-        name: selectedSweet.name,
-        category: selectedSweet.category,
-        price: selectedSweet.price.toString(),
-        quantity: selectedSweet.quantity.toString(),
-      });
-    }
-  }, [selectedSweet]);
+  const validateForm = () => {
+    const newErrors = {};
 
-  const handleSubmit = async () => {
-    if (
-      !formData.name ||
-      !formData.category ||
-      !formData.price ||
-      !formData.quantity
-    ) {
-      return;
-    }
+    if (!formData.name.trim()) newErrors.name = "Sweet name is required";
+    if (!formData.category) newErrors.category = "Category is required";
+    if (!formData.price || parseFloat(formData.price) <= 0)
+      newErrors.price = "Valid price is required";
+    if (!formData.quantity || parseInt(formData.quantity) < 0)
+      newErrors.quantity = "Valid quantity is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
     setLoading(true);
     try {
-      await onUpdateSweet(formData);
-      onBack();
+      await onSuccess(formData);
+      setErrors({});
     } catch (error) {
-      // Error handled by parent component
+      console.error("Failed to update sweet:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!selectedSweet) {
-    return (
-      <div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 ">Update Sweet</h2>
-        <p className="text-gray-600">
-          Select a sweet from the "All Sweets" section to update it.
-        </p>
-      </div>
-    );
-  }
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
 
   return (
-    <div className="max-w-md w-full">
-      <div className="flex items-center mb-6">
-        <button
-          onClick={onBack}
-          className="mr-4 text-gray-600 hover:text-gray-800"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <h2 className="text-2xl font-bold text-gray-800">
-          Update {selectedSweet.name}
-        </h2>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Sweet Name */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Sweet Name <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          value={formData.name}
+          onChange={(e) => handleInputChange("name", e.target.value)}
+          placeholder="Enter sweet name"
+          className={`w-full px-4 py-3 border rounded-xl bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 ${
+            errors.name ? "border-red-300" : "border-pink-200"
+          }`}
+        />
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600 flex items-center">
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {errors.name}
+          </p>
+        )}
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Enter sweet name"
-          />
-        </div>
+      {/* Category */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Category <span className="text-red-500">*</span>
+        </label>
+        <select
+          value={formData.category}
+          onChange={(e) => handleInputChange("category", e.target.value)}
+          className={`w-full px-4 py-3 border rounded-xl bg-white text-black focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 ${
+            errors.category ? "border-red-300" : "border-pink-200"
+          }`}
+        >
+          <option value="">Select a category</option>
+          {allowedCategories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+        {errors.category && (
+          <p className="mt-1 text-sm text-red-600 flex items-center">
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {errors.category}
+          </p>
+        )}
+      </div>
 
+      {/* Price & Quantity */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Category <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={formData.category}
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value="">Select Category</option>
-            {allowedCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
             Price (₹) <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
             value={formData.price}
-            onChange={(e) =>
-              setFormData({ ...formData, price: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Enter price"
+            onChange={(e) => handleInputChange("price", e.target.value)}
+            placeholder="0.00"
             min="0"
             step="0.01"
+            className={`w-full px-4 py-3 border rounded-xl bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 ${
+              errors.price ? "border-red-300" : "border-pink-200"
+            }`}
           />
+          {errors.price && (
+            <p className="mt-1 text-sm text-red-600 flex items-center">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {errors.price}
+            </p>
+          )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
             Quantity <span className="text-red-500">*</span>
           </label>
           <input
             type="number"
             value={formData.quantity}
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Enter quantity"
+            onChange={(e) => handleInputChange("quantity", e.target.value)}
+            placeholder="0"
             min="0"
+            className={`w-full px-4 py-3 border rounded-xl bg-white text-black placeholder-gray-500 focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 ${
+              errors.quantity ? "border-red-300" : "border-pink-200"
+            }`}
           />
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={onBack}
-            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded-md transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className={`flex-1 py-2 rounded-md transition-colors ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white`}
-          >
-            {loading ? "Updating..." : "Update Sweet"}
-          </button>
+          {errors.quantity && (
+            <p className="mt-1 text-sm text-red-600 flex items-center">
+              <svg
+                className="w-4 h-4 mr-1"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              {errors.quantity}
+            </p>
+          )}
         </div>
       </div>
-    </div>
+
+      {/* Changes Preview */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+        <h4 className="text-sm font-semibold text-blue-800 mb-3">
+          Changes Preview:
+        </h4>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-blue-700 font-medium mb-2">Original:</p>
+            <div className="text-blue-600 space-y-1">
+              <p>Name: {sweet.name}</p>
+              <p>Category: {sweet.category}</p>
+              <p>Price: ₹{sweet.price}</p>
+              <p>Quantity: {sweet.quantity}</p>
+            </div>
+          </div>
+          <div>
+            <p className="text-green-700 font-medium mb-2">Updated:</p>
+            <div className="text-green-600 space-y-1">
+              <p>Name: {formData.name || "—"}</p>
+              <p>Category: {formData.category || "—"}</p>
+              <p>Price: ₹{formData.price || "—"}</p>
+              <p>Quantity: {formData.quantity || "—"}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-4 pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-xl hover:bg-gray-300 transition-all duration-200 transform hover:scale-105"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
+        >
+          {loading ? "Updating..." : "Update Sweet"}
+        </button>
+      </div>
+    </form>
   );
 };
 
-export default UpdateSweet;
+export default UpdateSweetForm;

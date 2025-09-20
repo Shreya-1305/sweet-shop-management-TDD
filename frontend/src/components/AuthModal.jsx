@@ -11,6 +11,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
+  const { login, register } = useAuth();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -50,13 +52,18 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
+
     setIsLoading(true);
     setErrors({});
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        await register(formData.name, formData.email, formData.password);
+      }
       setFormData({ name: "", email: "", password: "" });
       onClose();
     } catch (error) {
@@ -74,6 +81,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  // 🔹 Reusable input field (same styling for login & signup)
   const InputField = ({ label, name, type = "text", placeholder }) => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -84,7 +92,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         name={name}
         value={formData[name]}
         onChange={handleChange}
-        className={`w-full px-4 py-3 border rounded-lg bg-white text-gray-900 placeholder-gray-500
+        className={`w-full px-4 py-3 border rounded-lg bg-gray-50 
           focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 
           ${errors[name] ? "border-red-500" : "border-gray-300"}`}
         placeholder={placeholder}
@@ -97,11 +105,15 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
+
+      {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all duration-200"
@@ -122,6 +134,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         </button>
 
         <div className="p-8">
+          {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
@@ -142,6 +155,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </p>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <InputField
@@ -165,12 +179,14 @@ const AuthModal = ({ isOpen, onClose }) => {
               placeholder="Enter your password"
             />
 
+            {/* Submit Error */}
             {errors.submit && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-600">{errors.submit}</p>
               </div>
             )}
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -189,6 +205,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             </button>
           </form>
 
+          {/* Toggle Mode */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               {isLogin ? "Don't have an account?" : "Already have an account?"}
