@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useNotification } from "../context/NotificationContext";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +13,7 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { login, register } = useAuth();
+  const { showNotification } = useNotification();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +54,6 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -61,8 +62,10 @@ const AuthModal = ({ isOpen, onClose }) => {
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
+        showNotification("Successfully logged in!", "success");
       } else {
         await register(formData.name, formData.email, formData.password);
+        showNotification("Account created successfully!", "success");
       }
       setFormData({ name: "", email: "", password: "" });
       onClose();
@@ -79,9 +82,7 @@ const AuthModal = ({ isOpen, onClose }) => {
     setFormData({ name: "", email: "", password: "" });
   };
 
-  if (!isOpen) return null;
-
-  // 🔹 Reusable input field (same styling for login & signup)
+  // 🔹 Reusable input field
   const InputField = ({ label, name, type = "text", placeholder }) => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -104,7 +105,11 @@ const AuthModal = ({ isOpen, onClose }) => {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className={`fixed inset-0 z-50 items-center justify-center ${
+        isOpen ? "flex" : "hidden"
+      }`}
+    >
       {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
