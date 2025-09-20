@@ -46,7 +46,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #fffffffb;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -118,4 +118,26 @@ button:focus-visible {
 /* Modal overlay to prevent scrolling */
 body.modal-open {
   overflow: hidden;
+}
+
+/* Add this animation for the notification progress bar */
+@keyframes progress-bar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-progress-bar {
+  animation: progress-bar 4000ms linear forwards;
+}
+
+/* Additional utility classes for truncating text */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
