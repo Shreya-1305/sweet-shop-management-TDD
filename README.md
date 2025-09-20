@@ -17,6 +17,10 @@ It includes:
 
 ---
 
+## 📸 Working Video
+
+[[Watch the demo video]((https://youtu.be/URyRFRPyKxo)]
+
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
