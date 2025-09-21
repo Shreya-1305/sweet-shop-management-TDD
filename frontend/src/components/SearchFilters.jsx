@@ -10,11 +10,14 @@ const SearchFilters = ({
   onClearFilters,
 }) => {
   const categories = [
-    "Traditional",
-    "Dry Fruits",
-    "Milk Based",
-    "Syrup Based",
-    "Festival Special",
+    "Milk-based",
+    "Sugar-based",
+    "Fried",
+    "Stuffed",
+    "Dry Fruits-based",
+    "Halwa",
+    "Barfi",
+    "Ladoo",
   ];
 
   return (
