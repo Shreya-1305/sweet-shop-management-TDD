@@ -13,25 +13,52 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(null);
 
   // Check if user is logged in on app start
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-
-    if (storedToken && storedUser) {
+    const initializeAuth = () => {
       try {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        const storedToken = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
+
+        if (storedToken && storedUser) {
+          // Validate token format (basic check)
+          if (storedToken.split(".").length === 3) {
+            // JWT has 3 parts
+            const parsedUser = JSON.parse(storedUser);
+            setToken(storedToken);
+            setUser(parsedUser);
+          } else {
+            // Invalid token format, clear storage
+            clearAuthData();
+          }
+        }
       } catch (error) {
         console.error("Error parsing stored user data:", error);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        clearAuthData();
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    initializeAuth();
   }, []);
+
+  const clearAuthData = () => {
+    // Clear all possible auth-related localStorage items
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken"); // In case there are other keys
+    localStorage.removeItem("userData"); // In case there are other keys
+
+    // Clear sessionStorage as well (in case it's used somewhere)
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+
+    setToken(null);
+    setUser(null);
+  };
 
   const login = async (email, password) => {
     try {
@@ -43,6 +70,7 @@ export const AuthProvider = ({ children }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
+          credentials: "omit", // Prevent cookies from being sent/stored
         }
       );
 
@@ -52,7 +80,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || "Login failed");
       }
 
-      // Store token and user data
+      // Clear any existing auth data first
+      clearAuthData();
+
+      // Store new token and user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -75,6 +106,7 @@ export const AuthProvider = ({ children }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ name, email, password }),
+          credentials: "omit", // Prevent cookies from being sent/stored
         }
       );
 
@@ -84,7 +116,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || "Registration failed");
       }
 
-      // Store token and user data
+      // Clear any existing auth data first
+      clearAuthData();
+
+      // Store new token and user data
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -98,10 +133,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setToken(null);
-    setUser(null);
+    clearAuthData();
   };
 
   const isAuthenticated = () => {

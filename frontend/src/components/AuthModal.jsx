@@ -1,6 +1,40 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNotification } from "../context/NotificationContext";
+import { useNavigate } from "react-router-dom"; // Add this import
+
+// 🔹 Move InputField component outside to prevent re-creation on each render
+const InputField = ({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  error,
+}) => (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-2">
+      {label}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value || ""} // Ensure empty string if value is null/undefined
+      onChange={onChange}
+      autoComplete="new-password" // More aggressive autocomplete prevention
+      autoCorrect="off"
+      autoCapitalize="none"
+      spellCheck="false"
+      data-form-type="other" // Prevent form recognition
+      className={`w-full px-4 py-3 border rounded-lg bg-gray-50 
+        focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 
+        ${error ? "border-red-500" : "border-gray-300"}`}
+      placeholder={placeholder}
+    />
+    {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+  </div>
+);
 
 const AuthModal = ({ isOpen, onClose }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,9 +45,11 @@ const AuthModal = ({ isOpen, onClose }) => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [formKey, setFormKey] = useState(0); // Force form re-render
 
   const { login, register } = useAuth();
   const { showNotification } = useNotification();
+  const navigate = useNavigate(); // Add this hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,12 +57,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       ...prev,
       [name]: value,
     }));
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
   };
 
   const validateForm = () => {
@@ -54,21 +84,40 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Clear previous errors and validate
+    setErrors({});
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setErrors({});
 
     try {
+      let userData;
+
       if (isLogin) {
-        await login(formData.email, formData.password);
+        userData = await login(formData.email, formData.password);
         showNotification("Successfully logged in!", "success");
       } else {
-        await register(formData.name, formData.email, formData.password);
+        userData = await register(
+          formData.name,
+          formData.email,
+          formData.password
+        );
         showNotification("Account created successfully!", "success");
       }
+
+      // Clear form data
       setFormData({ name: "", email: "", password: "" });
       onClose();
+
+      // Role-based redirection
+      if (userData.user.role === "admin") {
+        navigate("/admin");
+        showNotification("Welcome to Admin Dashboard!", "info");
+      } else {
+        navigate("/purchase");
+        showNotification("Welcome! Start exploring our sweets!", "info");
+      }
     } catch (error) {
       setErrors({ submit: error.message });
     } finally {
@@ -80,29 +129,30 @@ const AuthModal = ({ isOpen, onClose }) => {
     setIsLogin(!isLogin);
     setErrors({});
     setFormData({ name: "", email: "", password: "" });
+    setFormKey((prev) => prev + 1); // Force form re-render with new key
   };
 
-  // 🔹 Reusable input field
-  const InputField = ({ label, name, type = "text", placeholder }) => (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={formData[name]}
-        onChange={handleChange}
-        className={`w-full px-4 py-3 border rounded-lg bg-gray-50 
-          focus:outline-none focus:ring-2 focus:ring-pink-500 transition-all duration-200 
-          ${errors[name] ? "border-red-500" : "border-gray-300"}`}
-        placeholder={placeholder}
-      />
-      {errors[name] && (
-        <p className="mt-1 text-sm text-red-500">{errors[name]}</p>
-      )}
-    </div>
-  );
+  // Clear form when modal opens/closes or when toggling modes
+  React.useEffect(() => {
+    if (!isOpen) {
+      // Force clear all form data when modal closes
+      setFormData({ name: "", email: "", password: "" });
+      setErrors({});
+      setFormKey((prev) => prev + 1); // Force form re-render
+    } else {
+      // When modal opens, also clear any potential cached data
+      setFormData({ name: "", email: "", password: "" });
+      setErrors({});
+    }
+  }, [isOpen]);
+
+  // Additional effect to ensure clean state on component mount
+  React.useEffect(() => {
+    // Clear any potential cached values and force form re-render
+    setFormData({ name: "", email: "", password: "" });
+    setErrors({});
+    setFormKey(0);
+  }, []);
 
   return (
     <div
@@ -161,12 +211,19 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            autoComplete="off"
+          >
             {!isLogin && (
               <InputField
                 label="Full Name"
                 name="name"
                 placeholder="Enter your full name"
+                value={formData.name}
+                onChange={handleChange}
+                error={errors.name}
               />
             )}
 
@@ -175,6 +232,9 @@ const AuthModal = ({ isOpen, onClose }) => {
               name="email"
               type="email"
               placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              error={errors.email}
             />
 
             <InputField
@@ -182,6 +242,9 @@ const AuthModal = ({ isOpen, onClose }) => {
               name="password"
               type="password"
               placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              error={errors.password}
             />
 
             {/* Submit Error */}

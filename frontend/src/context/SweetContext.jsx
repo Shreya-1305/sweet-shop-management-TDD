@@ -8,12 +8,12 @@ const SweetContext = createContext();
 export const SweetProvider = ({ children }) => {
   const [sweets, setSweets] = useState([]);
   const [filteredSweets, setFilteredSweets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start as false, only set to true when actually fetching
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
 
-  const { token } = useAuth();
+  const { token, isAuthenticated, loading: authLoading } = useAuth();
   const { showNotification } = useNotification();
 
   const [selectedSweet, setSelectedSweet] = useState(null);
@@ -23,6 +23,13 @@ export const SweetProvider = ({ children }) => {
    * Fetch all sweets
    * --------------------------- */
   const fetchSweets = async () => {
+    // Don't fetch if not authenticated
+    if (!isAuthenticated() || !token) {
+      setSweets([]);
+      setFilteredSweets([]);
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/sweets`, {
@@ -32,22 +39,44 @@ export const SweetProvider = ({ children }) => {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch sweets");
+      if (!response.ok) {
+        // Handle 401 Unauthorized specifically
+        if (response.status === 401) {
+          console.warn("Unauthorized access - user may need to log in again");
+          return;
+        }
+        throw new Error("Failed to fetch sweets");
+      }
 
       const data = await response.json();
       setSweets(data.sweets || []);
       setFilteredSweets(data.sweets || []);
     } catch (error) {
       console.error("Error fetching sweets:", error);
-      showNotification("Failed to load sweets. Please try again.", "error");
+      // Only show notification if user is authenticated (to avoid spam on login page)
+      if (isAuthenticated()) {
+        showNotification("Failed to load sweets. Please try again.", "error");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  // Only fetch sweets when user is authenticated and auth loading is complete
   useEffect(() => {
-    fetchSweets();
-  }, []);
+    // Wait for auth to finish loading
+    if (authLoading) return;
+
+    // Only fetch if user is authenticated
+    if (isAuthenticated() && token) {
+      fetchSweets();
+    } else {
+      // Clear data if user is not authenticated
+      setSweets([]);
+      setFilteredSweets([]);
+      setLoading(false);
+    }
+  }, [token, authLoading]); // Re-run when token changes or auth loading completes
 
   /** ---------------------------
    * Filtering logic
@@ -86,6 +115,11 @@ export const SweetProvider = ({ children }) => {
    * Customer: Purchase
    * --------------------------- */
   const handlePurchase = async (sweetId, quantity) => {
+    if (!isAuthenticated()) {
+      showNotification("Please log in to make a purchase", "error");
+      return;
+    }
+
     try {
       const response = await fetch(
         `${API_URL}/api/sweets/${sweetId}/purchase`,
@@ -123,6 +157,11 @@ export const SweetProvider = ({ children }) => {
    * Admin: Add Sweet
    * --------------------------- */
   const handleAddSweet = async (formData) => {
+    if (!isAuthenticated()) {
+      showNotification("Please log in to add sweets", "error");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/sweets`, {
         method: "POST",
@@ -151,6 +190,11 @@ export const SweetProvider = ({ children }) => {
    * Admin: Update Sweet
    * --------------------------- */
   const handleUpdateSweet = async (sweetId, formData) => {
+    if (!isAuthenticated()) {
+      showNotification("Please log in to update sweets", "error");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/sweets/${sweetId}`, {
         method: "PUT",
@@ -179,6 +223,11 @@ export const SweetProvider = ({ children }) => {
    * Admin: Restock Sweet
    * --------------------------- */
   const handleRestock = async (sweetId, quantity) => {
+    if (!isAuthenticated()) {
+      showNotification("Please log in to restock sweets", "error");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/sweets/${sweetId}/restock`, {
         method: "POST",
@@ -210,6 +259,11 @@ export const SweetProvider = ({ children }) => {
    * Admin: Delete Sweet
    * --------------------------- */
   const handleDeleteSweet = async (sweetId) => {
+    if (!isAuthenticated()) {
+      showNotification("Please log in to delete sweets", "error");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/sweets/${sweetId}`, {
         method: "DELETE",
@@ -253,8 +307,8 @@ export const SweetProvider = ({ children }) => {
         setSelectedCategory,
         priceRange,
         setPriceRange,
-        selectedSweet, // ✅ added
-        setSelectedSweet, // ✅ added
+        selectedSweet,
+        setSelectedSweet,
         fetchSweets,
         clearFilters,
         handlePurchase,
