@@ -39,7 +39,7 @@ It includes:
 
 ![Purchase Page](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Purchase%20page.png)
 
-### 📦 Restock Modal
+### 📦 Restock Sweet
 
 ![Restock Modal](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Restock%20Modal.png)
 
@@ -47,7 +47,20 @@ It includes:
 
 ## Deployed Project
 
-You can view the live project here: [Sweet Shop Management](https://sweet-shop-management-tdd-k9hz.vercel.app/admin)
+You can view the live project here: [Sweet Shop Management](https://sweet-shop-management-tdd-k9hz.vercel.app/)
+
+## Testing Credentials
+
+Admin Credentials:
+
+email: shreya@example.com
+password: password123
+
+
+User Credentials: test@example.com
+password: password123
+
+
 
 ## 📁 Project Structure
 
