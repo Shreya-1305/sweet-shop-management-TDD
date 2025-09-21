@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ["https://sweet-shop-management-tdd.onrender.com"], // only frontend URL
+  origin: ["sweet-shop-management-tdd-kgp4.vercel.app"], // only frontend URL
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
