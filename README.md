@@ -210,8 +210,8 @@ npm test
 
 This project was **augmented with AI tools** to improve efficiency:
 
-- **ChatGPT** → Helped refine backend routes, error handling, and CSS styling ideas.
-- **Claude** → Assisted in brainstorming test case edge scenarios.
+- **ChatGPT** →  Assisted in backend routes, brainstorming test case edge scenarios and error handling.
+- **Claude** → Assisted in frontend logic and CSS styling ideas.
 
 **Reflection:** AI tools significantly improved my productivity by handling boilerplate and suggesting alternative test cases, allowing me to focus on **business logic, debugging, and system design**.
 
