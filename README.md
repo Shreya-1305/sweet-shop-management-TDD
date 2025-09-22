@@ -1,25 +1,53 @@
 # 🍬 MithaiMart - Taste the Sweetness of Tradition
 
-Welcome to **MithaiMart**, a full-stack **Sweet Shop Management System** built using **Test-Driven Development (TDD)**.  
+Welcome to **MithaiMart**, a full-stack **Sweet Shop Management System** built using **Test-Driven Development (TDD)**.
 This project was developed as part of a **Kata assigned by Incubyte** to demonstrate skills in **API development, database management, frontend implementation, testing, and clean coding practices**.
 
 ---
 
 ## 🎯 Objective
 
-The goal of this project was to design, build, and test a **MERN-based sweet shop system** with proper **TDD methodology** (Red → Green → Refactor).  
+The goal of this project was to design, build, and test a **MERN-based sweet shop system** with proper **TDD methodology** (Red → Green → Refactor).
 It includes:
 
-- 🛠️ Backend API with authentication & inventory management
-- 🎨 Modern frontend with React + Tailwind CSS
-- ✅ Full test coverage using Jest & Supertest
-- 🔒 Secure role-based access (User vs. Admin)
+* 🛠️ Backend API with authentication & inventory management
+* 🎨 Modern frontend with React + Tailwind CSS
+* ✅ Full test coverage using Jest & Supertest
+* 🔒 Secure role-based access (User vs. Admin)
 
 ---
 
 ## 📸 Working Video
 
-[[Watch the demo video]((https://youtu.be/URyRFRPyKxo)]
+\[[Watch the demo video](https://youtu.be/URyRFRPyKxo)]
+
+---
+
+## 🚀 Live Demo
+
+This project is deployed online using **Vercel** for the frontend and **Render** for the backend.
+
+* **Live Project:** [Sweet Shop Management - Live](https://sweet-shop-management-tdd-k9hz.vercel.app/)
+
+
+* **Frontend (Vercel):** [Frontend - Vercel](https://sweet-shop-management-tdd-k9hz.vercel.app/)
+* **Backend (Render):** [Sweet Shop Management API - Render](https://sweet-shop-management-tdd.onrender.com)
+
+---
+
+## 🧪 Testing Credentials
+
+**Admin Credentials:**
+
+* Email: [shreya@example.com](mailto:shreya@example.com)
+* Password: password123
+
+**User Credentials:**
+
+* Email: [test@example.com](mailto:test@example.com)
+* Password: password123
+
+---
 
 ## 📸 Screenshots
 
@@ -53,20 +81,6 @@ It includes:
 
 ---
 
-## Deployed Project
-
-You can view the live project here: [Sweet Shop Management](https://sweet-shop-management-tdd-k9hz.vercel.app/)
-
-## Testing Credentials
-
-Admin Credentials:
-
-email: shreya@example.com
-password: password123
-
-User Credentials: test@example.com
-password: password123
-
 ## 📁 Project Structure
 
 ```
@@ -95,6 +109,31 @@ mithaimart/
 ├── package.json
 └── README.md
 ```
+
+---
+
+## ✅ Test Results
+
+| 📄 Test File                    | 🧪 Description                                    | ✅ Passed |
+| ------------------------------- | ------------------------------------------------- | -------- |
+| `searchSweets.test.js`          | Search sweets by name, category, price range      | 8/8      |
+| `auth.integration.test.js`      | Register/Login integration flow                   | 2/2      |
+| `inventory.integration.test.js` | Restock & purchase inventory                      | 5/5      |
+| `restockSweet.test.js`          | Restocking edge cases (Admin only)                | 7/7      |
+| `sweet.integration.test.js`     | Add, update, delete sweets (Admin vs. User roles) | 6/6      |
+| `addSweet.test.js`              | Validate & add sweets                             | 9/9      |
+| `login.test.js`                 | Login validation cases                            | 5/5      |
+| `updateSweet.test.js`           | Updating sweets with validation errors            | 8/8      |
+| `purchaseSweet.test.js`         | Purchase flow & errors                            | 8/8      |
+| `viewAllSweets.test.js`         | Fetch all sweets                                  | 5/5      |
+| `register.test.js`              | Register new users with edge cases                | 3/3      |
+| `deleteSweet.test.js`           | Delete sweet with error handling                  | 6/6      |
+
+**🔬 Summary**
+
+* **Test Suites:** 12/12 passed
+* **Total Tests:** 75/75 passed
+* **Execution Time:** 14.088s
 
 ---
 
@@ -139,33 +178,8 @@ cd backend
 npm test
 ```
 
-- Frameworks: **Jest + Supertest**
-- Coverage: **100% of critical API flows**
-
----
-
-## ✅ Test Results
-
-| 📄 Test File                    | 🧪 Description                                    | ✅ Passed |
-| ------------------------------- | ------------------------------------------------- | --------- |
-| `searchSweets.test.js`          | Search sweets by name, category, price range      | 8/8       |
-| `auth.integration.test.js`      | Register/Login integration flow                   | 2/2       |
-| `inventory.integration.test.js` | Restock & purchase inventory                      | 5/5       |
-| `restockSweet.test.js`          | Restocking edge cases (Admin only)                | 7/7       |
-| `sweet.integration.test.js`     | Add, update, delete sweets (Admin vs. User roles) | 6/6       |
-| `addSweet.test.js`              | Validate & add sweets                             | 9/9       |
-| `login.test.js`                 | Login validation cases                            | 5/5       |
-| `updateSweet.test.js`           | Updating sweets with validation errors            | 8/8       |
-| `purchaseSweet.test.js`         | Purchase flow & errors                            | 8/8       |
-| `viewAllSweets.test.js`         | Fetch all sweets                                  | 5/5       |
-| `register.test.js`              | Register new users with edge cases                | 3/3       |
-| `deleteSweet.test.js`           | Delete sweet with error handling                  | 6/6       |
-
-**🔬 Summary**
-
-- **Test Suites:** 12/12 passed
-- **Total Tests:** 75/75 passed
-- **Execution Time:** 14.088s
+* Frameworks: **Jest + Supertest**
+* Coverage: **100% of critical API flows**
 
 ---
 
@@ -203,11 +217,11 @@ npm test
 
 ## 💻 Tech Stack
 
-- **Frontend:** React, Tailwind CSS
-- **Backend:** Node.js, Express
-- **Database:** MongoDB (Mongoose ODM)
-- **Testing:** Jest, Supertest
-- **Auth:** JWT (Role-based access)
+* **Frontend:** React, Tailwind CSS
+* **Backend:** Node.js, Express
+* **Database:** MongoDB (Mongoose ODM)
+* **Testing:** Jest, Supertest
+* **Auth:** JWT (Role-based access)
 
 ---
 
@@ -215,8 +229,8 @@ npm test
 
 This project was **augmented with AI tools** to improve efficiency:
 
-- **ChatGPT** → Assisted in backend routes, brainstorming test case edge scenarios and error handling.
-- **Claude** → Assisted in frontend logic and CSS styling ideas.
+* **ChatGPT** → Assisted in backend routes, brainstorming test case edge scenarios and error handling.
+* **Claude** → Assisted in frontend logic and CSS styling ideas.
 
 **Reflection:** AI tools significantly improved my productivity by handling boilerplate and suggesting alternative test cases, allowing me to focus on **business logic, debugging, and system design**.
 
@@ -224,7 +238,7 @@ This project was **augmented with AI tools** to improve efficiency:
 
 ## 🙏 Acknowledgements
 
-Special thanks to **Incubyte** for this challenging and insightful task.  
+Special thanks to **Incubyte** for this challenging and insightful task.
 It pushed me to apply **TDD, clean code practices, and modern AI-assisted workflows** to build a production-grade system.
 
 ---
