@@ -29,9 +29,7 @@ This project is deployed online using **Vercel** for the frontend and **Render**
 
 * **Live Project:** [Sweet Shop Management - Live](https://sweet-shop-management-tdd-k9hz.vercel.app/)
 
-
-* **Frontend (Vercel):** [Frontend - Vercel](https://sweet-shop-management-tdd-k9hz.vercel.app/)
-* **Backend (Render):** [Sweet Shop Management API - Render](https://sweet-shop-management-tdd.onrender.com)
+**Note:** After logging in or signing up, please wait a few seconds for the system to respond, as the backend is hosted on Render and may take a moment to initialize.
 
 ---
 
