@@ -43,6 +43,14 @@ It includes:
 
 ![Restock Modal](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Restock%20Modal.png)
 
+### 📦 Restock Sweet
+
+![Update Sweet](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Update%20Sweet%20Page.png)
+
+### 📦 Restock Sweet
+
+![Sdd Sweet](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Add%20Sweet.png)
+
 ---
 
 ## Deployed Project
@@ -56,11 +64,8 @@ Admin Credentials:
 email: shreya@example.com
 password: password123
 
-
 User Credentials: test@example.com
 password: password123
-
-
 
 ## 📁 Project Structure
 
@@ -210,7 +215,7 @@ npm test
 
 This project was **augmented with AI tools** to improve efficiency:
 
-- **ChatGPT** →  Assisted in backend routes, brainstorming test case edge scenarios and error handling.
+- **ChatGPT** → Assisted in backend routes, brainstorming test case edge scenarios and error handling.
 - **Claude** → Assisted in frontend logic and CSS styling ideas.
 
 **Reflection:** AI tools significantly improved my productivity by handling boilerplate and suggesting alternative test cases, allowing me to focus on **business logic, debugging, and system design**.

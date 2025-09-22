@@ -1,6 +1,6 @@
 import React from "react";
 
-// Fixed AdminSidebar Component (removed update sweet)
+// Fixed AdminSidebar Component
 const AdminSidebar = ({
   activeTab,
   setActiveTab,
@@ -83,10 +83,6 @@ const AdminSidebar = ({
               Quick Stats
             </h4>
             <div className="space-y-2 text-sm text-pink-700">
-              <div className="flex justify-between">
-                <span>Total Sweets:</span>
-                <span className="font-bold">5</span>
-              </div>
               <div className="flex justify-between">
                 <span>Categories:</span>
                 <span className="font-bold">8</span>
