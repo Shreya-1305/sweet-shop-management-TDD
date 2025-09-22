@@ -43,13 +43,13 @@ It includes:
 
 ![Restock Modal](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Restock%20Modal.png)
 
-### 📦 Restock Sweet
+### 📦 Update Sweet
 
 ![Update Sweet](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Update%20Sweet%20Page.png)
 
-### 📦 Restock Sweet
+### 📦 Add Sweet
 
-![Sdd Sweet](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Add%20Sweet.png)
+![Add Sweet](https://github.com/Shreya-1305/sweet-shop-management-TDD/blob/main/Snapshots/FrontendUI/Add%20Sweet.png)
 
 ---
 
